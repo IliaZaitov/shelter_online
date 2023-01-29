@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="feed">
+    <div class="news">{{message}}</div>
+</div>
+</body>
+<script>
+    function httpGetAsync(theUrl, callback)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous
+    xmlHttp.send(null);
+}
+
+function response_handler(txt) {
+    let feed = document.getElementById("feed");
+    let news_div=document.createElement("div");
+    news_div.classList.add("news");
+    news_div.innerHTML=txt;
+    let news_divs=document.getElementsByClassName('news');
+    if (news_divs.length>5) {
+        news_divs[0].remove();
+    }
+    feed.append(news_div)
+}
+
+setInterval(() => httpGetAsync('http://localhost:5000/api/update/1',response_handler),3000);
+
+</script>
+</html>

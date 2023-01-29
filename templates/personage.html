@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Personage</title>
+</head>
+<body><hr>
+    <div><img src="{{url_for('static',  filename=personage.avatar_path)}}" width='200px'></div>
+    <div>name:{{personage.name}}</div>
+    <div>hp:<progress max="{{personage.max_hp}}" value="{{personage.hp}}"></div>
+    <div>money:{{personage.money}}</div>
+    <div>stimpacks:{{personage.stimpacks}}</div><hr>
+    <div>S:<progress max="10" value="{{personage.strength}}"></div>
+    <div>P:<progress max="10" value="{{personage.perception}}"></div>
+    <div>E:<progress max="10" value="{{personage.endurance}}"></div>
+    <div>C:<progress max="10" value="{{personage.charisma}}"></div>
+    <div>I:<progress max="10" value="{{personage.intellect}}"></div>
+    <div>A:<progress max="10" value="{{personage.agility}}"></div>
+    <div>L:<progress max="10" value="{{personage.luck}}"></div><hr>
+
+<p>
+    <form method="post">Delete personage?
+
+<input type="submit"  value="Submit"></form>
+
+	</p>
+</body>
+</html>

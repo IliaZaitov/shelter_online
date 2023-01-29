@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="personage">
+    <div><img src="{{url_for('static',  filename=personage.avatar_path)}}" width='200px'></div>
+    <div>name:{{personage.name}}</div>
+    <div>hp:<progress max="{{personage.max_hp}}" value="{{personage.hp}}"></div>
+    <div>money:{{personage.money}}</div>
+    <div>stimpacks:{{personage.stimpacks}}</div><hr>
+    <div>S:<progress max="10" value="{{personage.strength}}"></div>
+    <div>P:<progress max="10" value="{{personage.perception}}"></div>
+    <div>E:<progress max="10" value="{{personage.endurance}}"></div>
+    <div>C:<progress max="10" value="{{personage.charisma}}"></div>
+    <div>I:<progress max="10" value="{{personage.intellect}}"></div>
+    <div>A:<progress max="10" value="{{personage.agility}}"></div>
+    <div>L:<progress max="10" value="{{personage.luck}}"></div><hr>
+</div>
+<div id="enemy">
+    <div><img src="{{url_for('static',  filename=enemy.avatar_path)}}" width='200px'></div>
+    <div>name:{{enemy.name}}</div>
+    <div>hp:<progress max="{{enemy.max_hp}}" value="{{enemy.hp}}"></div>
+    <div>money:{{enemy.money}}</div>
+    <div>stimpacks:{{enemy.stimpacks}}</div><hr>
+    <div>S:<progress max="10" value="{{enemy.strength}}"></div>
+    <div>P:<progress max="10" value="{{enemy.perception}}"></div>
+    <div>E:<progress max="10" value="{{enemy.endurance}}"></div>
+    <div>C:<progress max="10" value="{{enemy.charisma}}"></div>
+    <div>I:<progress max="10" value="{{enemy.intellect}}"></div>
+    <div>A:<progress max="10" value="{{enemy.agility}}"></div>
+    <div>L:<progress max="10" value="{{enemy.luck}}"></div><hr>
+</div>
+<div id="feed">
+    <div class="news">{{message}}</div>
+</div>
+</body>
+<script>
+    function httpGetAsync(theUrl, callback)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous
+    xmlHttp.send(null);
+}
+
+function response_handler(txt) {
+    let feed = document.getElementById("feed");
+    let news_div=document.createElement("div");
+    news_div.classList.add("news");
+    news_div.innerHTML=txt;
+    let news_divs=document.getElementsByClassName('news');
+    if (news_divs.length>5) {
+        news_divs[0].remove();
+    }
+    feed.append(news_div)
+}
+
+setInterval(() => httpGetAsync('http://localhost:5000/api/update/3',response_handler),3000);
+
+</script>
+</html>
