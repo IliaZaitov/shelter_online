@@ -4,7 +4,11 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
+<<<<<<< HEAD
     <orderEntry type="jdk" jdkName="Python 3.8 (shelter_online_2)" jdkType="Python SDK" />
+=======
+    <orderEntry type="jdk" jdkName="Python 3.8 (shelter_online_iguumentsev)" jdkType="Python SDK" />
+>>>>>>> 876b37d793d312c9787f1f995c0d21dee82e04cd
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
