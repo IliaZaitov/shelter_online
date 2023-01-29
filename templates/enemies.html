@@ -1,0 +1,47 @@
+<HTML>
+	<head>
+		<title>Personages</title>
+		<meta charset="utf8">
+		<style>
+			header{
+			text-align: center;
+			font-size: 45px;
+			font-style: oblique;
+			font-weight: 700;
+			}
+			a{
+			color: black;
+			font-size: 25px;
+			text-decoration: none;
+			}
+			a:hover {
+			text-decoration: underline;
+    		font-size: 30px;
+    		font-style: oblique;
+    		font-weight: 700;
+    		}
+    		p{
+    		font-size: 30px;}
+    		select{
+    		font-size: 23px;
+   			}
+   			input{
+   			font-size: 23px;
+   			}
+
+		</style>
+	</head>
+	<body>
+	<header>Enemies</header>
+	<ul>
+		{%for enemy in enemies%}
+		<li><a href="{{url_for('enemy_page', p_id=enemy.id)}}">{{enemy.name}}</a></li>
+		{% endfor %}
+	</ul>
+
+
+
+
+	</body>
+
+</HTML>

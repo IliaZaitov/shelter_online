@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Enemy</title>
+</head>
+<body><hr>
+    <div><img src="{{url_for('static',  filename=enemy.avatar_path)}}" width='200px'></div>
+    <div>name:{{enemy.name}}</div>
+    <div>hp: {{enemy.hp}}/{{enemy.max_hp}}</div>
+    <div>money:{{enemy.money}}</div>
+    <div>damage:{{enemy.damage}}</div>
+
+<p>
+    <form method="post">Delete enemy?
+
+<input type="submit"  value="Submit"></form>
+
+	</p>
+</body>
+</html>
