@@ -19,6 +19,7 @@ class PersonageModel(db.Model):
     max_hp = db.Column(db.Integer,nullable=False)
     hp = db.Column(db.Integer, nullable=False)
     money = db.Column(db.Integer, nullable=False)
+    experience = db.Column(db.Integer, nullable=False)
     stimpacks = db.Column(db.Integer, nullable=False)
     avatar_path=db.Column(db.String(50))
     state=db.Column(db.String(10))
@@ -35,6 +36,7 @@ class PersonageModel(db.Model):
         self.max_hp = self.endurance*10+20
         self.hp=self.max_hp
         self.money = random.randint(10,20)
+        self.experience = random.randint(10, 20)
         self.stimpacks=2
         self.avatar_path=f"img/{self.name}/avatar.png"
         self.state="idle"
