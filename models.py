@@ -41,3 +41,26 @@ class PersonageModel(db.Model):
 
     def __repr__(self):
         return f"{self.name} have {self.hp} of {self.max_hp} hp"
+
+
+class EnemyModel(db.Model):
+    __tablename__ = "enemies"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), unique = True)
+    damage = db.Column(db.Integer, nullable=False)
+    max_hp = db.Column(db.Integer,nullable=False)
+    hp = db.Column(db.Integer, nullable=False)
+    money = db.Column(db.Integer, nullable=False)
+    avatar_path=db.Column(db.String(50))
+
+    def __init__(self, name):
+        self.name = name
+        self.max_hp = random.randint(10,25)
+        self.hp=self.max_hp
+        self.damage = self.hp
+        self.money = random.randint(5,10)
+        self.avatar_path=f"img/{self.name}/avatar.png"
+
+    def __repr__(self):
+        return f"{self.name} have {self.hp} of {self.max_hp} hp"
