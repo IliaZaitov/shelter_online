@@ -144,6 +144,8 @@ def game_loop():
     with app.app_context():
         personages = PersonageModel.query.all()
         for personage in personages:
+            personage.money += 1
+            personage.experience += 2
             if personage.state=='idle':
                 if random.randint(1,100)<=5:
                     personage.state="battle"
@@ -158,10 +160,22 @@ def game_loop():
                     personage.hp-=random.randint(1,10)
                 if personage.hp>0 and enemy.hp<=0:
                     personage.state = 'idle'
+                    personage.experience += 10
                     print(personage.state, personage.name)
                 if personage.hp<=0:
                     personage.state='dead'
                     print(personage.state, personage.name)
+            elif personage.state == 'dead':
+                if personage.money >= 25 and personage.experience >= 50:
+                    personage.state = ""
+                    personage.hp = personage.max_hp
+                    personage.money -= 25
+                    personage.experience -= 25
+                    personage.state = "idle"
+                else:
+                    personage.state = 'dead'
+                    personage.money += 1
+                    personage.experience += 2
             db.session.add(personage)
         db.session.commit()
 
