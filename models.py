@@ -44,6 +44,22 @@ class PersonageModel(db.Model):
     def __repr__(self):
         return f"{self.name} have {self.hp} of {self.max_hp} hp"
 
+    def json(self):
+        hero={"S":self.strength,
+              "P":self.perception,
+              "E":self.endurance,
+              #TODO3
+              "hp":self.hp,
+              "max_hp":self.max_hp}
+
+        return hero
+    #TODO2
+    def is_attack_succesfull(self,obj):
+        r=random.randint(0,1)
+        if r==1:
+            return True
+        else:
+            return False
 
 class EnemyModel(db.Model):
     __tablename__ = "enemies"
@@ -78,3 +94,6 @@ class EnemyModel(db.Model):
 
     def __repr__(self):
         return f"{self.name} have {self.hp} of {self.max_hp} hp"
+    #TODO1
+    def json(self):
+        pass

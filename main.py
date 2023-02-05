@@ -145,11 +145,11 @@ def dead(p_id):
 def update(p_id):
     personage = PersonageModel.query.filter_by(id=p_id).first_or_404()
     if personage.state == 'idle':
-        return {"status": 200, "message": random.choice(idle_messages),"hero":{"hp":personage.hp, "max_hp":personage.max_hp}}
+        return {"status": 200, "message": random.choice(idle_messages), "hero":personage.json()}
     if personage.state == 'battle':
-        return {"status": 200, "message": random.choice(battle_messages).format(personage.name) + str(personage.hp),"hero":{"hp":personage.hp, "max_hp":personage.max_hp}}
+        return {"status": 200, "message": random.choice(battle_messages).format(personage.name) + str(personage.hp),"hero":personage.json()}
     if personage.state == 'dead':
-        return {"status": 200, "message": random.choice(dead_messages).format(personage.name) + str(personage.hp),"hero":{"hp":personage.hp, "max_hp":personage.max_hp}}
+        return {"status": 200, "message": random.choice(dead_messages).format(personage.name) + str(personage.hp),"hero":personage.json()}
 
 
 def call_repeatedly(interval, func, *args):
@@ -174,8 +174,8 @@ def game_loop():
                     print(personage.state,personage.name)
             elif personage.state == 'battle':
                 enemy = EnemyModel.query.filter_by(id=1).first_or_404()
-                if (random.randint(0,personage.strength+personage.perception)>
-                        random.randint(0,enemy.endurance + enemy.agility)):
+                #TODO5 функцию попадания для всех
+                if personage.is_attack_succesfull(enemy):
                     enemy.hp-=random.randint(1,10)
                 if (random.randint(0,enemy.strength+enemy.perception)>
                         random.randint(0,personage.endurance + personage.agility)):
@@ -198,6 +198,9 @@ def game_loop():
                     personage.state = 'dead'
                     personage.money += 1
                     personage.experience += 2
+            elif personage.state=="heal":
+                pass
+                #TODo4
             db.session.add(personage)
         db.session.commit()
 
