@@ -145,11 +145,11 @@ def dead(p_id):
 def update(p_id):
     personage = PersonageModel.query.filter_by(id=p_id).first_or_404()
     if personage.state == 'idle':
-        return {"status": 200, "message": random.choice(idle_messages)}
+        return {"status": 200, "message": random.choice(idle_messages),"hero":{"hp":personage.hp, "max_hp":personage.max_hp}}
     if personage.state == 'battle':
-        return {"status": 200, "message": random.choice(battle_messages).format(personage.name) + str(personage.hp)}
+        return {"status": 200, "message": random.choice(battle_messages).format(personage.name) + str(personage.hp),"hero":{"hp":personage.hp, "max_hp":personage.max_hp}}
     if personage.state == 'dead':
-        return {"status": 200, "message": random.choice(dead_messages).format(personage.name) + str(personage.hp)}
+        return {"status": 200, "message": random.choice(dead_messages).format(personage.name) + str(personage.hp),"hero":{"hp":personage.hp, "max_hp":personage.max_hp}}
 
 
 def call_repeatedly(interval, func, *args):
@@ -173,7 +173,7 @@ def game_loop():
                     personage.state="battle"
                     print(personage.state,personage.name)
             elif personage.state == 'battle':
-                enemy = PersonageModel.query.filter_by(id=1).first_or_404()
+                enemy = EnemyModel.query.filter_by(id=1).first_or_404()
                 if (random.randint(0,personage.strength+personage.perception)>
                         random.randint(0,enemy.endurance + enemy.agility)):
                     enemy.hp-=random.randint(1,10)

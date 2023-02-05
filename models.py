@@ -49,19 +49,31 @@ class EnemyModel(db.Model):
     __tablename__ = "enemies"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), unique = True)
-    damage = db.Column(db.Integer, nullable=False)
-    max_hp = db.Column(db.Integer,nullable=False)
+    name = db.Column(db.String(20), unique=True)
+    strength = db.Column(db.Integer, nullable=False)
+    perception = db.Column(db.Integer, nullable=False)
+    endurance = db.Column(db.Integer, nullable=False)
+    charisma = db.Column(db.Integer, nullable=False)
+    intellect = db.Column(db.Integer, nullable=False)
+    agility = db.Column(db.Integer, nullable=False)
+    luck = db.Column(db.Integer, nullable=False)
+    max_hp = db.Column(db.Integer, nullable=False)
     hp = db.Column(db.Integer, nullable=False)
     money = db.Column(db.Integer, nullable=False)
     avatar_path=db.Column(db.String(50))
 
     def __init__(self, name):
-        self.name = name
-        self.max_hp = random.randint(10,25)
-        self.hp=self.max_hp
-        self.damage = self.hp
-        self.money = random.randint(5,10)
+        self.name=name
+        self.strength = random.randint(1, 2)
+        self.perception = random.randint(1, 2)
+        self.endurance = random.randint(1, 2)
+        self.charisma = 0
+        self.intellect = random.randint(1, 2)
+        self.agility = random.randint(1, 2)
+        self.luck = random.randint(1, 2)
+        self.max_hp = self.endurance * 10 + 20
+        self.hp = self.max_hp
+        self.money = random.randint(10, 20)
         self.avatar_path=f"img/{self.name}/avatar.png"
 
     def __repr__(self):
