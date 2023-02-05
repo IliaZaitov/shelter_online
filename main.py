@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, request, flash
 from flask_cors import CORS
-from models import db, PersonageModel
+from models import db, PersonageModel, EnemyModel
 from threading import Event, Thread
 
 
@@ -30,14 +30,25 @@ def create_tables():
     user2 = PersonageModel("Elaine Dawson")
     user3 = PersonageModel("James White")
     user4 = PersonageModel("Joanne Rowling")
+    enemy1 = EnemyModel("Чужой")
+    enemy2 = EnemyModel("Радиоактивный таракан")
+    enemy3 = EnemyModel("Кротокрыс")
+    enemy4 = EnemyModel("Болотник")
     db.session.add_all([user1,user2,user3,user4])
+    db.session.add_all([enemy1, enemy2, enemy3, enemy4])
     db.session.commit()
+
 
 
 @app.route("/personages")
 def list_personages():
     personages = PersonageModel.query.all()
     return render_template("personages.html",personages=personages)
+
+@app.route("/enemies")
+def list_enemies():
+    enemies = EnemyModel.query.all()
+    return render_template("enemies.html", enemies=enemies)
 
 @app.route("/personage/<p_id>",methods=["POST","GET"])
 def pers_page(p_id):
@@ -49,6 +60,17 @@ def pers_page(p_id):
         db.session.delete(personage)
         db.session.commit()
         return redirect("/personages")
+
+@app.route("/enemy/<p_id>",methods=["POST","GET"])
+def enemy_page(p_id):
+    if request.method == "GET":
+        enemy = EnemyModel.query.filter_by(id=p_id).first_or_404()
+        return render_template("enemy.html",enemy=enemy)
+    if request.method == "POST":
+        enemy = EnemyModel.query.filter_by(id=p_id).first_or_404()
+        db.session.delete(enemy)
+        db.session.commit()
+        return redirect("/enemies")
 
 @app.route("/personage",methods=["POST","GET"])
 def create_personage():
@@ -144,6 +166,8 @@ def game_loop():
     with app.app_context():
         personages = PersonageModel.query.all()
         for personage in personages:
+            personage.money += 1
+            personage.experience += 2
             if personage.state=='idle':
                 if random.randint(1,100)<=5:
                     personage.state="battle"
@@ -158,10 +182,22 @@ def game_loop():
                     personage.hp-=random.randint(1,10)
                 if personage.hp>0 and enemy.hp<=0:
                     personage.state = 'idle'
+                    personage.experience += 10
                     print(personage.state, personage.name)
                 if personage.hp<=0:
                     personage.state='dead'
                     print(personage.state, personage.name)
+            elif personage.state == 'dead':
+                if personage.money >= 25 and personage.experience >= 50:
+                    personage.state = ""
+                    personage.hp = personage.max_hp
+                    personage.money -= 25
+                    personage.experience -= 25
+                    personage.state = "idle"
+                else:
+                    personage.state = 'dead'
+                    personage.money += 1
+                    personage.experience += 2
             db.session.add(personage)
         db.session.commit()
 
