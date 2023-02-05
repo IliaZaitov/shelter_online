@@ -22,7 +22,7 @@ dead_messages=["{} разлагается физически",
           "Червяк ползет по ребру {} уже второй час",
           "{} переворачивается в гробу"]
 
-#@app.before_first_request
+@app.before_first_request
 def create_tables():
     db.drop_all()
     db.create_all()
@@ -123,11 +123,11 @@ def dead(p_id):
 def update(p_id):
     personage = PersonageModel.query.filter_by(id=p_id).first_or_404()
     if personage.state == 'idle':
-        return random.choice(idle_messages)
+        return {"status": 200, "message": random.choice(idle_messages)}
     if personage.state == 'battle':
-        return random.choice(battle_messages).format(personage.name)+str(personage.hp)
+        return {"status": 200, "message": random.choice(battle_messages).format(personage.name) + str(personage.hp)}
     if personage.state == 'dead':
-        return random.choice(dead_messages).format(personage.name)
+        return {"status": 200, "message": random.choice(dead_messages).format(personage.name) + str(personage.hp)}
 
 
 def call_repeatedly(interval, func, *args):

@@ -22,6 +22,9 @@
 }
 
 function response_handler(txt) {
+    let json_response = JSON.parse(str_response)
+    console.log(json_response)
+    let txt = json_response.message
     let feed = document.getElementById("feed");
     let news_div=document.createElement("div");
     news_div.classList.add("news");
