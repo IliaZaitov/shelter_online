@@ -97,3 +97,23 @@ class EnemyModel(db.Model):
     #TODO1
     def json(self):
         pass
+
+class UserModels(db.Model):
+    __tablename__ = "user"
+
+    id = db.Column(db.Integer, primary_key=True)
+    login = db.Column(db.String(20), unique=True)
+    mail = db.Column(db.String(256), unique=True)
+    password = db.Column(db.String(50))
+    personage_id = db.Column(db.Integer, primary_key=True)
+
+    def __init__(self, name):
+        self.login = login
+        self.mail = mail
+        self.password = password
+        self.personage_id = personage_id
+
+    def __repr__(self):
+        return f"""login: {self.login}
+                    mail: {self.mail}
+                    mail: {self.password} """
