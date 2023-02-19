@@ -38,7 +38,27 @@ def create_tables():
     db.session.add_all([enemy1, enemy2, enemy3, enemy4])
     db.session.commit()
 
+@app.route("/login",methods=["POST","GET"])
+def user_login():
+    if request.method == 'GET':
+        return render_template("login.html")
+    if request.method == 'POST':
+        login = request.form['login']
+        mail = request.form['mail']
+        password = request.form['password']
 
+        return render_template("reg_form.html")
+
+
+@app.route("/register",methods=["POST","GET"])
+def user_reg():
+    if request.method == 'GET':
+        return render_template("reg_form.html")
+    if request.method == 'POST':
+        login = request.form['login']
+        mail = request.form['mail']
+        password = request.form['password']
+        return render_template("reg_form.html")
 
 @app.route("/personages")
 def list_personages():
@@ -145,11 +165,11 @@ def dead(p_id):
 def update(p_id):
     personage = PersonageModel.query.filter_by(id=p_id).first_or_404()
     if personage.state == 'idle':
-        return random.choice(idle_messages)
+        return {"status": 200, "message": random.choice(idle_messages), "hero":personage.json()}
     if personage.state == 'battle':
-        return random.choice(battle_messages).format(personage.name)+str(personage.hp)
+        return {"status": 200, "message": random.choice(battle_messages).format(personage.name) + str(personage.hp),"hero":personage.json()}
     if personage.state == 'dead':
-        return random.choice(dead_messages).format(personage.name)
+        return {"status": 200, "message": random.choice(dead_messages).format(personage.name) + str(personage.hp),"hero":personage.json()}
 
 
 def call_repeatedly(interval, func, *args):
@@ -173,9 +193,9 @@ def game_loop():
                     personage.state="battle"
                     print(personage.state,personage.name)
             elif personage.state == 'battle':
-                enemy = PersonageModel.query.filter_by(id=1).first_or_404()
-                if (random.randint(0,personage.strength+personage.perception)>
-                        random.randint(0,enemy.endurance + enemy.agility)):
+                enemy = EnemyModel.query.filter_by(id=1).first_or_404()
+                #TODO5 функцию попадания для всех
+                if personage.is_attack_succesfull(enemy):
                     enemy.hp-=random.randint(1,10)
                 if (random.randint(0,enemy.strength+enemy.perception)>
                         random.randint(0,personage.endurance + personage.agility)):
@@ -198,6 +218,9 @@ def game_loop():
                     personage.state = 'dead'
                     personage.money += 1
                     personage.experience += 2
+            elif personage.state=="heal":
+                pass
+                #TODo4
             db.session.add(personage)
         db.session.commit()
 

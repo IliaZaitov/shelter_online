@@ -5,6 +5,9 @@
     <title>Title</title>
 </head>
 <body>
+<div id="hero_params">
+
+</div>
 <div id="feed">
     <div class="news">{{message}}</div>
 </div>
@@ -21,7 +24,10 @@
     xmlHttp.send(null);
 }
 
-function response_handler(txt) {
+function response_handler(str_response) {
+    let json_response = JSON.parse(str_response)
+    console.log(json_response)
+    let txt = json_response.message
     let feed = document.getElementById("feed");
     let news_div=document.createElement("div");
     news_div.classList.add("news");
@@ -31,6 +37,11 @@ function response_handler(txt) {
         news_divs[0].remove();
     }
     feed.append(news_div)
+    let hero = json_response.hero
+    let hero_div=document.getElementById('hero_params');
+    hero_div.innerHTML=`Здоровье: `+hero.hp;
+
+
 }
 
 setInterval(() => httpGetAsync('http://localhost:5000/api/update/1',response_handler),3000);
