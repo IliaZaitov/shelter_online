@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, flash
+from flask import Flask, render_template, redirect, request
 from flask_cors import CORS
 from models import db, PersonageModel, EnemyModel
 from threading import Event, Thread
@@ -22,7 +22,7 @@ dead_messages=["{} разлагается физически",
           "Червяк ползет по ребру {} уже второй час",
           "{} переворачивается в гробу"]
 
-#@app.before_first_request
+@app.before_first_request
 def create_tables():
     db.drop_all()
     db.create_all()
