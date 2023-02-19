@@ -4,15 +4,9 @@
     <meta charset="UTF-8">
     <title>Registration</title>
     <style>
-        .label{
-        float:left;
-        clear: left;
-        text-align:center
-        }
-        .form{
-        margin-left: 40px;
-        float:left;
-        text-align:center
+        .field{
+            clear:both;
+            text-align:right;
         }
 
 
@@ -21,46 +15,37 @@
 <body>
 <form action="" method="post">
     {{ form.csrf_token() }}
-    <div class="label">
+    <div class="field">
     {{ form.email.label() }}
-    </div>
-    <div class="form">
     {{ form.email}}
     {% for error in form.email.errors %}
         {{ error }}
     {% endfor %}
     </div>
 
-<div class="label">
+<div class="field">
     {{ form.username.label() }}
-    </div>
-    <div class="form">
     {{ form.username}}
     {% for error in form.username.errors %}
         {{ error }}
     {% endfor %}
         </div>
-<div class="label">
+<div class="field">
     {{ form.password.label() }}
-    </div>
-    <div class="form">
     {{ form.password() }}
     {% for error in form.password.errors %}
         {{ error }}
     {% endfor %}
         </div>
 
-<div class="label">
+<div class="field">
     {{ form.password_repeat.label() }}
-    </div>
-        <div class="form">
     {{ form.password_repeat() }}
     {% for error in form.password_repeat.errors %}
         {{ error }}
     {% endfor %}
             </div>
-        <br>
-    <div class="label">
+<div class="field">
 {{form.submit()}}
         </div>
 </form>
