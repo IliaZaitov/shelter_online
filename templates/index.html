@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    <style>
+        .field{
+            clear:both;
+            text-align:right;
+        }
+        .label{
+        padding-right:10px;
+        float:left;
+        }
+        form{
+        float:left;
+        }
+
+
+    </style>
+</head>
+<body>
+<form action="" method="post">
+    {{ form.csrf_token() }}
+    <div class="field">
+        <div class="label">
+    {{ form.email.label() }}
+            </div>
+    {{ form.email}}
+    {% for error in form.email.errors %}
+        {{ error }}
+    {% endfor %}
+    </div>
+
+<div class="field">
+    <div class="label">
+    {{ form.username.label() }}
+        </div>
+    {{ form.username}}
+    {% for error in form.username.errors %}
+        {{ error }}
+    {% endfor %}
+        </div>
+<div class="field">
+    <div class="label">
+    {{ form.password.label() }}
+        </div>
+    {{ form.password() }}
+    {% for error in form.password.errors %}
+        {{ error }}
+    {% endfor %}
+        </div>
+
+<div class="field">
+    <div class="label">
+    {{ form.password_repeat.label() }}
+        </div>
+    {{ form.password_repeat() }}
+    {% for error in form.password_repeat.errors %}
+        {{ error }}
+    {% endfor %}
+            </div>
+{{form.submit()}}
+</form>
+</body>
+</html>

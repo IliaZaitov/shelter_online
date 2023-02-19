@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, flash
+from flask import Flask, render_template, redirect, request
 from flask_cors import CORS
 from models import db, PersonageModel, EnemyModel
 from threading import Event, Thread
