@@ -50,7 +50,7 @@ def user_login():
         return render_template("reg_form.html")
 
 
-@app.route("/register",methods=["POST","GET"])
+@app.route("/reg", methods=["POST", "GET"])
 def user_reg():
     if request.method == 'GET':
         return render_template("reg_form.html")

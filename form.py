@@ -7,3 +7,4 @@ class LoginForm(FlaskForm):
     password = PasswordField("Password",validators=[DataRequired(),])
     password_repeat = PasswordField("Repeat the password", validators=[DataRequired(), ])
     submit = SubmitField()
+
