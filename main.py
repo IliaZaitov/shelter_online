@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, request
 from flask_cors import CORS
 from models import db, PersonageModel, EnemyModel
 from threading import Event, Thread
+from forms import RegForm, LoginForm
 
 
 import os, random
@@ -53,12 +54,12 @@ def user_login():
 @app.route("/reg", methods=["POST", "GET"])
 def user_reg():
     if request.method == 'GET':
-        return render_template("reg_form.html")
+        return render_template("reg.html")
     if request.method == 'POST':
         login = request.form['login']
-        mail = request.form['mail']
+        mail = request.form['email']
         password = request.form['password']
-        return render_template("reg_form.html")
+        return render_template("reg.html")
 
 @app.route("/personages")
 def list_personages():
