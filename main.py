@@ -38,7 +38,27 @@ def create_tables():
     db.session.add_all([enemy1, enemy2, enemy3, enemy4])
     db.session.commit()
 
+@app.route("/login",methods=["POST","GET"])
+def user_login():
+    if request.method == 'GET':
+        return render_template("login.html")
+    if request.method == 'POST':
+        login = request.form['login']
+        mail = request.form['mail']
+        password = request.form['password']
 
+        return render_template("reg_form.html")
+
+
+@app.route("/register",methods=["POST","GET"])
+def user_reg():
+    if request.method == 'GET':
+        return render_template("reg_form.html")
+    if request.method == 'POST':
+        login = request.form['login']
+        mail = request.form['mail']
+        password = request.form['password']
+        return render_template("reg_form.html")
 
 @app.route("/personages")
 def list_personages():
