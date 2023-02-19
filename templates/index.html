@@ -2,11 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Registration</title>
 </head>
 <body>
 <form action="" method="post">
     {{ form.csrf_token() }}
+
+    {{ form.username.label() }}
+    {{ form.username}}
+    {% for error in form.username.errors %}
+        {{ error }}
+    {% endfor %}
+
+    <br>
+
+
     {{ form.username.label() }}
     {{ form.username}}
     {% for error in form.username.errors %}
