@@ -100,7 +100,7 @@ class EnemyModel(db.Model):
     def json(self):
         pass
 
-class User(db.Model, UserMixin):
+class UserModels(db.Model, UserMixin):
     __tablename__="users"
 
     id = db.Column(db.Integer, primary_key=True)

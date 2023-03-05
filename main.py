@@ -1,9 +1,9 @@
 from flask import Flask, render_template, redirect, request
 from flask_cors import CORS
-from flask_login import LoginManager, current_user, login_required, login_user
+from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from models import db, PersonageModel, EnemyModel, UserModels
 from threading import Event, Thread
-from forms import RegForm, LoginForm
+from forms import SignupForm, LoginForm
 
 
 import os, random
@@ -59,12 +59,12 @@ def login():
     if form.validate_on_submit():
         username = request.form.get('username')
         password = request.form.get('password')
-        user = User.query.filter_by(username=username).first_or_404()
+        user = UserModels.query.filter_by(username=username).first_or_404()
         if user:
             if user.check_password(password):
                 # авторизация
                 login_user(user, remember=False)
-                return redirect("/userpage")
+                return redirect("/index")
             else:
                 print('Неправильный пароль')
 
@@ -83,12 +83,12 @@ def signup():
         email = request.form.get('email')
         password = request.form.get('password')
         password2 = request.form.get('password2')
-        if User.query.filter_by(username=username).first():
+        if UserModels.query.filter_by(username=username).first():
             return render_template('signup.html', form=form, message="Пользователь уже существует")
-        if User.query.filter_by(email=email).first():
+        if UserModels.query.filter_by(email=email).first():
             return render_template('signup.html', form=form, message="Email уже зарегистрирован")
         if password == password2:
-            user = User(username, email)
+            user = UserModels(username, email)
             user.set_password(password)
             db.session.add(user)
             db.session.commit()
@@ -104,6 +104,14 @@ def logout():
     if request.form.get('was_once_logged_in'):
         del request.form['was_once_logged_in']
     return redirect('/login')
+
+@app.route("/")
+def i():
+    auth=current_user.is_authenticated
+    if auth:
+        return redirect("/index")
+    else:
+        return redirect("/login")
 
 @app.route('/userpage')
 @login_required
