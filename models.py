@@ -1,6 +1,8 @@
 import random
 
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
@@ -98,7 +100,7 @@ class EnemyModel(db.Model):
     def json(self):
         pass
 
-class UserModels(db.Model):
+class UserModels(db.Model, UserMixin):
     __tablename__ = "user"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -107,13 +109,16 @@ class UserModels(db.Model):
     password = db.Column(db.String(50))
     personage_id = db.Column(db.Integer, primary_key=True)
 
-    def __init__(self, name):
-        self.login = login
-        self.mail = mail
-        self.password = password
+    def __init__(self,username,email, password):
+        self.login = username
+        self.mail = email
+        self.password = generate_password_hash(password)
         self.personage_id = personage_id
 
     def __repr__(self):
         return f"""login: {self.login}
                     mail: {self.mail}
                     mail: {self.password} """
+
+    def check_password(self,password):
+        return check_password_hash(self.password_hash,password)

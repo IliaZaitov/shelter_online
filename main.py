@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, request
 from flask_cors import CORS
-from models import db, PersonageModel, EnemyModel
+from flask_login import LoginManager, current_user, login_required, login_user
+from models import db, PersonageModel, EnemyModel, UserModels
 from threading import Event, Thread
 from forms import RegForm, LoginForm
 
@@ -9,9 +10,20 @@ import os, random
 
 app = Flask(__name__)
 cors = CORS(app)
+app.config['SECRET_KEY'] = "this_badass_secret_key"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
+
+
+login_manager = LoginManager(app)
+
+
+# функция - загрузчик пользователей
+# без нее не работает функция login_user
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.query(UserModels).get(user_id)
 
 idle_messages=["Ничего не происходит.",
           "Тишина...",
@@ -39,27 +51,50 @@ def create_tables():
     db.session.add_all([enemy1, enemy2, enemy3, enemy4])
     db.session.commit()
 
-@app.route("/login",methods=["POST","GET"])
-def user_login():
-    if request.method == 'GET':
-        return render_template("login.html")
-    if request.method == 'POST':
-        login = request.form['login']
-        mail = request.form['mail']
-        password = request.form['password']
+@app.route("/login", methods=['post', 'get'])
+def login():
+    form = LoginForm()  # добавляем форму
+    username = ""
+    password = ''
+    if form.validate_on_submit():
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = UserModels.query.filter_by(username=username).first_or_404()
+        if user:
+            if user.check_password(password):
+                # авторизация
+                login_user(user, remember=False)
+                return redirect("/userpage")
+            else:
+                print('Неправильный пароль')
 
-        return render_template("reg_form.html")
+    return render_template('login.html', form=form)
 
 
-@app.route("/reg", methods=["POST", "GET"])
-def user_reg():
-    if request.method == 'GET':
-        return render_template("reg.html")
-    if request.method == 'POST':
-        login = request.form['login']
-        mail = request.form['email']
-        password = request.form['password']
-        return render_template("reg.html")
+@app.route("/signup", methods=['post', 'get'])
+def signup():
+    form = SignupForm()
+    username = ""
+    email = ''
+    password = ''
+    password2 = ''
+    if form.validate_on_submit():
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        password2 = request.form.get('password2')
+        if UserModels.query.filter_by(username=username).first():
+            return render_template('signup.html', form=form, message="Пользователь существует")
+        if UserModels.query.filter_by(email=email).first():
+            return render_template('signup.html', form=form, message="Email зарегистрирован")
+        if password == password2:
+            user = UserModels(username, email, password)
+            db.session.add(user)
+            db.session.commit()
+            return redirect("/login")
+        else:
+            return render_template('signup.html', form=form, message="Пароли не совпадают")
+    return render_template('signup.html', form=form)
 
 @app.route("/personages")
 def list_personages():

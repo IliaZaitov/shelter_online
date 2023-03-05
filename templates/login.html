@@ -1,17 +1,20 @@
- <form action="action_page.php">
-  <div class="container">
-    <h1>Register</h1>
-    <p>Please fill in this form to create an account.</p>
-    <hr>
-
-    <label for="email"><b>Email</b></label>
-    <input type="text" placeholder="Enter Email" name="email" required>
-
-    <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required>
-
-    <label for="psw-repeat"><b>Repeat Password</b></label>
-    <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
-    <hr>
-    <button type="submit" class="registerbtn">Register</button>
-</form> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="" method="post">
+ {{ form.csrf_token() }}
+ {% for field in form if field.name != "csrf_token" %}
+<p>{{ field.label() }}</p>
+<p>{{ field }}
+ {% for error in field.errors %}
+{{ error }}
+ {% endfor %}
+</p>
+ {% endfor %}
+</form>
+</body>
+</html>
