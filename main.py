@@ -59,7 +59,7 @@ def login():
     if form.validate_on_submit():
         username = request.form.get('username')
         password = request.form.get('password')
-        user = UserModels.query.filter_by(username=username).first_or_404()
+        user = User.query.filter_by(username=username).first_or_404()
         if user:
             if user.check_password(password):
                 # авторизация
@@ -83,18 +83,34 @@ def signup():
         email = request.form.get('email')
         password = request.form.get('password')
         password2 = request.form.get('password2')
-        if UserModels.query.filter_by(username=username).first():
-            return render_template('reg.html', form=form, message="Пользователь существует")
-        if UserModels.query.filter_by(email=email).first():
-            return render_template('reg.html', form=form, message="Email зарегистрирован")
+        if User.query.filter_by(username=username).first():
+            return render_template('signup.html', form=form, message="Пользователь уже существует")
+        if User.query.filter_by(email=email).first():
+            return render_template('signup.html', form=form, message="Email уже зарегистрирован")
         if password == password2:
-            user = UserModels(username, email, password)
+            user = User(username, email)
+            user.set_password(password)
             db.session.add(user)
             db.session.commit()
             return redirect("/login")
         else:
-            return render_template('reg.html', form=form, message="Пароли не совпадают")
-    return render_template('reg.html', form=form)
+            return render_template('signup.html', form=form, message="Пароли не совпадают")
+    return render_template('signup.html', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    if request.form.get('was_once_logged_in'):
+        del request.form['was_once_logged_in']
+    return redirect('/login')
+
+@app.route('/userpage')
+@login_required
+def userpage():
+    username=current_user.username
+    return render_template('userpage.html', name=username)
+
 
 @app.route("/personages")
 def list_personages():
