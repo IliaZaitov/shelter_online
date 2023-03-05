@@ -64,7 +64,7 @@ def login():
             if user.check_password(password):
                 # авторизация
                 login_user(user, remember=False)
-                return redirect("/index")
+                return redirect("/userpage")
             else:
                 print('Неправильный пароль')
 
