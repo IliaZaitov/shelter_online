@@ -84,17 +84,17 @@ def signup():
         password = request.form.get('password')
         password2 = request.form.get('password2')
         if UserModels.query.filter_by(username=username).first():
-            return render_template('signup.html', form=form, message="Пользователь существует")
+            return render_template('reg.html', form=form, message="Пользователь существует")
         if UserModels.query.filter_by(email=email).first():
-            return render_template('signup.html', form=form, message="Email зарегистрирован")
+            return render_template('reg.html', form=form, message="Email зарегистрирован")
         if password == password2:
             user = UserModels(username, email, password)
             db.session.add(user)
             db.session.commit()
             return redirect("/login")
         else:
-            return render_template('signup.html', form=form, message="Пароли не совпадают")
-    return render_template('signup.html', form=form)
+            return render_template('reg.html', form=form, message="Пароли не совпадают")
+    return render_template('reg.html', form=form)
 
 @app.route("/personages")
 def list_personages():
