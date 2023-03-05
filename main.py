@@ -56,6 +56,7 @@ def login():
     form = LoginForm()  # добавляем форму
     username = ""
     password = ''
+
     if form.validate_on_submit():
         username = request.form.get('username')
         password = request.form.get('password')
