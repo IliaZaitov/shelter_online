@@ -35,7 +35,7 @@ dead_messages=["{} разлагается физически",
           "Червяк ползет по ребру {} уже второй час",
           "{} переворачивается в гробу"]
 
-#@app.before_first_request
+@app.before_first_request
 def create_tables():
     db.drop_all()
     db.create_all()
@@ -44,6 +44,9 @@ def create_tables():
     enemy3 = EnemyModel("Кротокрыс")
     enemy4 = EnemyModel("Болотник")
     db.session.add_all([enemy1, enemy2, enemy3, enemy4])
+    user_admin = UserModels("admin", "admin@gmail.ru", "admin666")
+    user_admin.is_admin=True
+    db.session.add_all([user_admin])
 
     db.session.commit()
 
@@ -130,6 +133,13 @@ def list_personages():
 def list_enemies():
     enemies = EnemyModel.query.all()
     return render_template("enemies.html", enemies=enemies)
+
+@app.route("/users")
+def list_users():
+        users = UserModels.query.all()
+        return render_template("users.html", users=users)
+
+
 
 @app.route("/personage/<p_id>",methods=["POST","GET"])
 def pers_page(p_id):

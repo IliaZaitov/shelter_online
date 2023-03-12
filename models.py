@@ -118,6 +118,7 @@ class UserModels(db.Model, UserMixin):
     mail = db.Column(db.String(256), unique=True)
     password = db.Column(db.String(50))
     personage = db.relationship('PersonageModel', backref='user', uselist=False)
+    is_admin = db.Column(db.Boolean)
 
     def __init__(self, username, email, password):
         self.login = username
