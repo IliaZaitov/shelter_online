@@ -3,13 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}">
 </head>
 <body>
-<div id="hero_params">
+<div class="wrapper">
 
-</div>
-<div id="feed">
-    <div class="news">{{message}}</div>
+    <div class="element" id="hero_container">
+        <h1> Герой </h1>
+        <div id="hero">
+          <div id="hero_name"></div>
+          <div> Здоровье: <span id="hero_hp"> </span> из <span id="hero_max_hp"> </span> </div>
+          <div> Атака: <span id="hero_attack"> </span>  </div>
+          <div> Защита: <span id="hero_defence"> </span> </div>
+          <div> Золото: <span id="hero_gold"> </span> </div>
+          <div> Опыт: <span id="hero_exp"> </span>  </div>
+        </div>
+    </div>
+
+    <div class="element" id="feed_container">
+      <h1> Новости </h1>
+      <div id="feed">
+      </div>
+    </div>
+
+    <div class="element" id="enemy_container">
+        <h1> Враг </h1>
+        <div id="enemy">
+          <div> Здоровье: <span id="enemy_hp"> </span> из <span id="enemy_max_hp"> </span> </div>
+          <div> Атака: <span id="enemy_attack"> </span>  </div>
+          <div> Защита: <span id="enemy_defence"> </span> </div>
+          <div> Золото: <span id="enemy_gold"> </span> </div>
+          <div> Опыт: <span id="enemy_exp"> </span>  </div>
+        </div>
+    </div>
 </div>
 </body>
 <script>
@@ -38,13 +64,13 @@ function response_handler(str_response) {
     }
     feed.append(news_div)
     let hero = json_response.hero
-    let hero_div=document.getElementById('hero_params');
-    hero_div.innerHTML=`Здоровье: `+hero.hp;
+    let hero_div=document.getElementById('hero_hp');
+    hero_div.innerHTML=hero.hp;
 
 
 }
 
-setInterval(() => httpGetAsync('http://localhost:5000/api/update/1',response_handler),3000);
+setInterval(() => httpGetAsync('http://localhost:5000/api/update/{{current_user.id}}',response_handler),3000);
 
 </script>
 </html>

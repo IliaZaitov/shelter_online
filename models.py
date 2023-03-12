@@ -27,6 +27,7 @@ class PersonageModel(db.Model):
     stimpacks = db.Column(db.Integer, nullable=False)
     avatar_path = db.Column(db.String(50))
     state = db.Column(db.String(10))
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
 
     def __init__(self, name):
         self.strength = random.randint(1, 2)
@@ -127,12 +128,8 @@ class UserModels(db.Model, UserMixin):
     def __repr__(self):
         return 'Пользователь: '+self.username
 
-    def __init__(self,username,email):
-        self.username=username
-        self.email=email
-
     def set_password(self,password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        return check_password_hash(self.password, password)

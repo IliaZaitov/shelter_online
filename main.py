@@ -35,21 +35,16 @@ dead_messages=["{} разлагается физически",
           "Червяк ползет по ребру {} уже второй час",
           "{} переворачивается в гробу"]
 
-@app.before_first_request
+#@app.before_first_request
 def create_tables():
     db.drop_all()
     db.create_all()
-    user1 = PersonageModel("Alan Parson")
-    user2 = PersonageModel("Elaine Dawson")
-    user3 = PersonageModel("James White")
-    user4 = PersonageModel("Joanne Rowling")
-    db.session.add_all([user1, user2, user3, user4])
-    db.session.commit()
     enemy1 = EnemyModel("Чужой")
     enemy2 = EnemyModel("Радиоактивный таракан")
     enemy3 = EnemyModel("Кротокрыс")
     enemy4 = EnemyModel("Болотник")
     db.session.add_all([enemy1, enemy2, enemy3, enemy4])
+
     db.session.commit()
 
 @app.route("/login", methods=['post', 'get'])
@@ -74,13 +69,13 @@ def login():
 
 @app.route("/signup", methods=['post', 'get'])
 def signup():
-    form = RegForm()
+    form = SignupForm()
     if form.validate_on_submit():
         username = request.form.get('username')
         personage_name = request.form.get('personage_name')
         email = request.form.get('email')
         password = request.form.get('password')
-        password_repeat = request.form.get('password_repeat')
+        password_repeat = request.form.get('password2')
         if UserModels.query.filter_by(login=username).first():
             return render_template('reg.html', form=form, message="Пользователь существует")
         if UserModels.query.filter_by(mail=email).first():
@@ -109,17 +104,20 @@ def logout():
     return redirect('/login')
 
 @app.route("/")
-def i():
-    auth=current_user.is_authenticated
+@app.route("/index")
+def index():
+    auth = current_user.is_authenticated
     if auth:
-        return redirect("/index")
+        m = random.choice(idle_messages)
+        return render_template("game.html", message=m)
     else:
         return redirect("/login")
+
 
 @app.route('/userpage')
 @login_required
 def userpage():
-    username=current_user.username
+    username=current_user.login
     return render_template('userpage.html', name=username)
 
 
@@ -207,11 +205,7 @@ def modify_personage(p_id):
         db.session.commit()
         return redirect("/personages")
 
-@app.route("/")
-@app.route("/index")
-def index():
-    m=random.choice(idle_messages)
-    return render_template("game.html",message=m)
+
 
 @app.route("/battle/<p_id>")
 def battle(p_id):
