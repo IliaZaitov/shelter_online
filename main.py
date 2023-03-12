@@ -35,7 +35,7 @@ dead_messages=["{} разлагается физически",
           "Червяк ползет по ребру {} уже второй час",
           "{} переворачивается в гробу"]
 
-#@app.before_first_request
+@app.before_first_request
 def create_tables():
     db.drop_all()
     db.create_all()
