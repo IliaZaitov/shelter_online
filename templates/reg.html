@@ -44,6 +44,15 @@
         </div>
 <div class="field">
     <div class="label">
+    {{ form.personage_name.label() }}
+        </div>
+    {{ form.personage_name}}
+    {% for error in form.personage_name.errors %}
+        {{ error }}
+    {% endfor %}
+        </div>
+<div class="field">
+    <div class="label">
     {{ form.password.label() }}
         </div>
     {{ form.password() }}
