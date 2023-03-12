@@ -109,7 +109,8 @@ def index():
     auth = current_user.is_authenticated
     if auth:
         m = random.choice(idle_messages)
-        return render_template("game.html", message=m)
+        username = current_user.login
+        return render_template("game.html", message=m, name=username)
     else:
         return redirect("/login")
 

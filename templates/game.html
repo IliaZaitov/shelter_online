@@ -7,27 +7,38 @@
 </head>
 <body>
 <div class="wrapper">
+    <header>
+    <div class="head_font" >Shelter online</div>
+    <div class="name_font" >{{name}}
+    <a href="/logout">Выйти</a>
+        </div>
+    </header>
 
     <div class="element" id="hero_container">
         <h1> Герой </h1>
         <div id="hero">
+            <div class="base_font" >
           <div id="hero_name"></div>
           <div> Здоровье: <span id="hero_hp"> </span> из <span id="hero_max_hp"> </span> </div>
           <div> Атака: <span id="hero_attack"> </span>  </div>
           <div> Защита: <span id="hero_defence"> </span> </div>
           <div> Золото: <span id="hero_gold"> </span> </div>
           <div> Опыт: <span id="hero_exp"> </span>  </div>
+                </div>
         </div>
     </div>
 
     <div class="element" id="feed_container">
       <h1> Новости </h1>
+        <div class="base_font" >
       <div id="feed">
       </div>
+            </div>
     </div>
 
     <div class="element" id="enemy_container">
         <h1> Враг </h1>
+        <div class="base_font" >
         <div id="enemy">
           <div> Здоровье: <span id="enemy_hp"> </span> из <span id="enemy_max_hp"> </span> </div>
           <div> Атака: <span id="enemy_attack"> </span>  </div>
@@ -35,8 +46,20 @@
           <div> Золото: <span id="enemy_gold"> </span> </div>
           <div> Опыт: <span id="enemy_exp"> </span>  </div>
         </div>
+            </div>
     </div>
 </div>
+
+<footer>
+
+ДОБАВИТЬ: <br>
+    список разработчиков и ссылокчи на соцсети<br>
+    Кнонка дотатов<br>
+    все права защищены, copyright  и т.д
+</footer>
+
+
+
 </body>
 <script>
     function httpGetAsync(theUrl, callback)
