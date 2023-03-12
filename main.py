@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, flash
 from flask_cors import CORS
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from models import db, PersonageModel, EnemyModel, UserModels
@@ -43,11 +43,12 @@ def create_tables():
     user2 = PersonageModel("Elaine Dawson")
     user3 = PersonageModel("James White")
     user4 = PersonageModel("Joanne Rowling")
+    db.session.add_all([user1, user2, user3, user4])
+    db.session.commit()
     enemy1 = EnemyModel("Чужой")
     enemy2 = EnemyModel("Радиоактивный таракан")
     enemy3 = EnemyModel("Кротокрыс")
     enemy4 = EnemyModel("Болотник")
-    db.session.add_all([user1,user2,user3,user4])
     db.session.add_all([enemy1, enemy2, enemy3, enemy4])
     db.session.commit()
 
@@ -59,7 +60,7 @@ def login():
     if form.validate_on_submit():
         username = request.form.get('username')
         password = request.form.get('password')
-        user = UserModels.query.filter_by(username=username).first_or_404()
+        user = UserModels.query.filter_by(login=username).first_or_404()
         if user:
             if user.check_password(password):
                 # авторизация
@@ -73,24 +74,26 @@ def login():
 
 @app.route("/signup", methods=['post', 'get'])
 def signup():
-    form = SignupForm()
-    username = ""
-    email = ''
-    password = ''
-    password2 = ''
+    form = RegForm()
     if form.validate_on_submit():
         username = request.form.get('username')
+        personage_name = request.form.get('personage_name')
         email = request.form.get('email')
         password = request.form.get('password')
-        password2 = request.form.get('password2')
-        if UserModels.query.filter_by(username=username).first():
-            return render_template('signup.html', form=form, message="Пользователь уже существует")
-        if UserModels.query.filter_by(email=email).first():
-            return render_template('signup.html', form=form, message="Email уже зарегистрирован")
-        if password == password2:
-            user = UserModels(username, email)
-            user.set_password(password)
+        password_repeat = request.form.get('password_repeat')
+        if UserModels.query.filter_by(login=username).first():
+            return render_template('reg.html', form=form, message="Пользователь существует")
+        if UserModels.query.filter_by(mail=email).first():
+            return render_template('reg.html', form=form, message="Email зарегистрирован")
+        if PersonageModel.query.filter_by(name=personage_name).first():
+            return render_template('reg.html', form=form, message="Персонаж с таким именем уже зарегистрирован")
+        if password == password_repeat:
+            user = UserModels(username, email, password)
+            personage = PersonageModel(personage_name)
             db.session.add(user)
+            db.session.commit()
+            db.session.add(personage)
+            personage.set_user(user)
             db.session.commit()
             return redirect("/login")
         else:
