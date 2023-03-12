@@ -1,23 +1,24 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, Length, Email
 
-
-class RegForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired(), Email()])
-    username = StringField("Username", validators=[DataRequired(), ])
-    personage_name = StringField("Personage name", validators=[DataRequired(), ])
-    password = PasswordField("Password", validators=[DataRequired(), Length(min=5, max=100)])
-    password_repeat = PasswordField("Repeat the password", validators=[DataRequired(), Length(min=5, max=100)])
-    submit = SubmitField()
-
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Email
 
 class LoginForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired(), ])
-    password = PasswordField("Password", validators=[DataRequired(), Length(min=5, max=100)])
+    username = StringField('Логин', validators=[DataRequired()])
+    password = PasswordField('Пароль', validators=[DataRequired()])
     submit = SubmitField()
-    '''
-    def validate_password_confirm(form, field):
-        if password.data!=password_repeat.data:
-            raise ValidationError('Passwords should be same')
-    '''
+
+class SignupForm(FlaskForm):
+    username = StringField('Логин', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(),Email()])
+    password = PasswordField('Пароль', validators=[DataRequired()])
+    password2 = PasswordField('Подтвердите пароль', validators=[DataRequired()])
+    submit = SubmitField()
+
+class LogoutForm(FlaskForm):
+    username = StringField('Логин', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(),Email()])
+    password = PasswordField('Пароль', validators=[DataRequired()])
+    password2 = PasswordField('Подтвердите пароль', validators=[DataRequired()])
+    submit = SubmitField()
+

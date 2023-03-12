@@ -1,9 +1,9 @@
 from flask import Flask, render_template, redirect, request, flash
 from flask_cors import CORS
-from flask_login import LoginManager, current_user, login_required, login_user
+from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from models import db, PersonageModel, EnemyModel, UserModels
 from threading import Event, Thread
-from forms import RegForm, LoginForm
+from forms import SignupForm, LoginForm
 
 
 import os, random
@@ -97,8 +97,31 @@ def signup():
             db.session.commit()
             return redirect("/login")
         else:
-            return render_template('reg.html', form=form, message="Пароли не совпадают")
-    return render_template('reg.html', form=form)
+            return render_template('signup.html', form=form, message="Пароли не совпадают")
+    return render_template('signup.html', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    if request.form.get('was_once_logged_in'):
+        del request.form['was_once_logged_in']
+    return redirect('/login')
+
+@app.route("/")
+def i():
+    auth=current_user.is_authenticated
+    if auth:
+        return redirect("/index")
+    else:
+        return redirect("/login")
+
+@app.route('/userpage')
+@login_required
+def userpage():
+    username=current_user.username
+    return render_template('userpage.html', name=username)
+
 
 @app.route("/personages")
 def list_personages():
