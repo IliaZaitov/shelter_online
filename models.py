@@ -11,7 +11,6 @@ class PersonageModel(db.Model):
     __tablename__ = "personages"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     name = db.Column(db.String(20), unique=True)
     strength = db.Column(db.Integer, nullable=False)
     perception = db.Column(db.Integer, nullable=False)
@@ -28,6 +27,7 @@ class PersonageModel(db.Model):
     avatar_path = db.Column(db.String(50))
     state = db.Column(db.String(10))
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
+    enemy = db.relationship('EnemyModel', backref='personage', uselist=False)
 
     def __init__(self, name):
         self.strength = random.randint(1, 2)
@@ -52,16 +52,6 @@ class PersonageModel(db.Model):
     def __repr__(self):
         return f"{self.name} have {self.hp} of {self.max_hp} hp"
 
-    def json(self):
-        hero = {"S": self.strength,
-                "P": self.perception,
-                "E": self.endurance,
-                # TODO3
-                "hp": self.hp,
-                "max_hp": self.max_hp}
-
-        return hero
-
     # TODO2
     def is_attack_succesfull(self, obj):
         r = random.randint(0, 1)
@@ -70,10 +60,15 @@ class PersonageModel(db.Model):
         else:
             return False
 
+    @property
+    def json(self):
+        dictionary = self.__dict__
+        dictionary.pop('_sa_instance_state')
+        return dictionary
+
 
 class EnemyModel(db.Model):
     __tablename__ = "enemies"
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True)
     strength = db.Column(db.Integer, nullable=False)
@@ -87,8 +82,9 @@ class EnemyModel(db.Model):
     hp = db.Column(db.Integer, nullable=False)
     money = db.Column(db.Integer, nullable=False)
     avatar_path = db.Column(db.String(50))
+    personage_id = db.Column(db.Integer(), db.ForeignKey('personages.id'))
 
-    def __init__(self, name):
+    def __init__(self, name, personage):
         self.name = name
         self.strength = random.randint(1, 2)
         self.perception = random.randint(1, 2)
@@ -101,17 +97,20 @@ class EnemyModel(db.Model):
         self.hp = self.max_hp
         self.money = random.randint(10, 20)
         self.avatar_path = f"img/{self.name}/avatar.png"
+        self.personage_id = personage.id
 
     def __repr__(self):
         return f"{self.name} have {self.hp} of {self.max_hp} hp"
 
-    # TODO1
+    @property
     def json(self):
-        pass
+        dictionary = self.__dict__
+        dictionary.pop('_sa_instance_state')
+        return dictionary
 
 
 class UserModels(db.Model, UserMixin):
-    __tablename__="users"
+    __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(20), unique=True)
@@ -124,11 +123,10 @@ class UserModels(db.Model, UserMixin):
         self.mail = email
         self.password = generate_password_hash(password)
 
-
     def __repr__(self):
-        return 'Пользователь: '+self.username
+        return 'Пользователь: ' + self.username
 
-    def set_password(self,password):
+    def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
