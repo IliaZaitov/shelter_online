@@ -56,7 +56,10 @@ class PersonageModel(db.Model):
         hero = {"S": self.strength,
                 "P": self.perception,
                 "E": self.endurance,
-                # TODO3
+                "C": self.charisma,
+                "I": self.intellect,
+                "A": self.agility,
+                "L": self.luck,
                 "hp": self.hp,
                 "max_hp": self.max_hp}
 
