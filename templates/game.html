@@ -19,12 +19,19 @@
         <div id="hero">
             <div class="base_font" >
           <div id="hero_name"></div>
-          <div> Здоровье: <span id="hero_hp"> </span> из <span id="hero_max_hp"> </span> </div>
-          <div> Атака: <span id="hero_attack"> </span>  </div>
-          <div> Защита: <span id="hero_defence"> </span> </div>
-          <div> Золото: <span id="hero_gold"> </span> </div>
-          <div> Опыт: <span id="hero_exp"> </span>  </div>
-                </div>
+          <div> Здоровье: <span id="hero_hp"> </span> из <span id="hero_max_hp"> </span> </div>               
+          <div> Сила: <span id="strength"> </span>  </div>
+          <div> Восприятие: <span id="perception"> </span> </div>
+          <div> Выносливость: <span id="endurance"> </span> </div>
+          <div> Харизма: <span id="charisma"> </span>  </div>
+          <div> Интелект: <span id="intellect"> </span> </div>
+          <div> Ловкость: <span id="agility"> </span> </div>
+          <div> Удача: <span id="luck"> </span> </div>
+            <br>
+          <div> Аптечки: <span id="stimpacks"> </span>  </div>
+          <div> Золото: <span id="money"> </span> </div>
+          <div> Опыт: <span id="experience"> </span>  </div>
+
         </div>
     </div>
 
@@ -89,6 +96,28 @@ function response_handler(str_response) {
     let hero = json_response.hero
     let hero_div=document.getElementById('hero_hp');
     hero_div.innerHTML=hero.hp;
+    hero_div=document.getElementById('hero_max_hp');
+    hero_div.innerHTML=hero.max_hp;
+    hero_div=document.getElementById('strength');
+    hero_div.innerHTML=hero.S;
+    hero_div=document.getElementById('perception');
+    hero_div.innerHTML=hero.P;
+    hero_div=document.getElementById('endurance');
+    hero_div.innerHTML=hero.E;
+    hero_div=document.getElementById('charisma');
+    hero_div.innerHTML=hero.C;
+    hero_div=document.getElementById('intellect');
+    hero_div.innerHTML=hero.I;
+    hero_div=document.getElementById('agility');
+    hero_div.innerHTML=hero.A;
+    hero_div=document.getElementById('luck');
+    hero_div.innerHTML=hero.L;
+    hero_div=document.getElementById('experience');
+    hero_div.innerHTML=hero.exp;
+    hero_div=document.getElementById('money');
+    hero_div.innerHTML=hero.money;
+    hero_div=document.getElementById('stimpacks');
+    hero_div.innerHTML=hero.stimpacks;
 
 
 }
