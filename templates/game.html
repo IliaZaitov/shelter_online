@@ -17,7 +17,7 @@
     <div class="element" id="hero_container">
         <h1> Герой </h1>
         <div id="hero">
-            <div class="base_font" >
+
           <div id="hero_name"></div>
           <div> Здоровье: <span id="hero_hp"> </span> из <span id="hero_max_hp"> </span> </div>               
           <div> Сила: <span id="strength"> </span>  </div>
@@ -97,7 +97,7 @@ function response_handler(str_response) {
     let hero_hp_div=document.getElementById('hero_hp');
     hero_div.innerHTML=hero.hp;
 
-    if (hero.state === 'battle'): {
+    if (hero.state === 'battle') {
         enemy = json_response.enemy
         document.getElementById('enemy_max_hp').innerHTML(enemy.max_hp)
         document.getElementById('enemy_hp').innerHTML(enemy.hp)
