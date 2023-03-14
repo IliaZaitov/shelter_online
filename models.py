@@ -60,7 +60,10 @@ class PersonageModel(db.Model):
                 "I": self.intellect,
                 "A": self.agility,
                 "L": self.luck,
+                "exp": self.experience,
+                "money": self.money,
                 "hp": self.hp,
+                "stimpacks": self.stimpacks,
                 "max_hp": self.max_hp}
 
         return hero

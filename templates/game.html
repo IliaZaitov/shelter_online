@@ -13,6 +13,7 @@
         <div id="hero">
           <div id="hero_name"></div>
           <div> Здоровье: <span id="hero_hp"> </span> из <span id="hero_max_hp"> </span> </div>
+            <br>
           <div> Сила: <span id="strength"> </span>  </div>
           <div> Восприятие: <span id="perception"> </span> </div>
           <div> Выносливость: <span id="endurance"> </span> </div>
@@ -20,8 +21,10 @@
           <div> Интелект: <span id="intellect"> </span> </div>
           <div> Ловкость: <span id="agility"> </span> </div>
           <div> Удача: <span id="luck"> </span> </div>
-          <div> Золото: <span id="hero_gold"> </span> </div>
-          <div> Опыт: <span id="hero_exp"> </span>  </div>
+            <br>
+          <div> Аптечки: <span id="stimpacks"> </span>  </div>
+          <div> Золото: <span id="money"> </span> </div>
+          <div> Опыт: <span id="experience"> </span>  </div>
         </div>
     </div>
 
@@ -87,6 +90,12 @@ function response_handler(str_response) {
     hero_div.innerHTML=hero.A;
     hero_div=document.getElementById('luck');
     hero_div.innerHTML=hero.L;
+    hero_div=document.getElementById('experience');
+    hero_div.innerHTML=hero.exp;
+    hero_div=document.getElementById('money');
+    hero_div.innerHTML=hero.money;
+    hero_div=document.getElementById('stimpacks');
+    hero_div.innerHTML=hero.stimpacks;
 
 
 }
