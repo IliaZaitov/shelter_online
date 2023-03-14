@@ -51,8 +51,7 @@ class PersonageModel(db.Model):
 
     def __repr__(self):
         return f"{self.name} have {self.hp} of {self.max_hp} hp"
-
-    # TODO2
+   
     def is_attack_succesfull(self, obj):
         r = random.randint(0, 1)
         if r == 1:
@@ -117,6 +116,7 @@ class UserModels(db.Model, UserMixin):
     mail = db.Column(db.String(256), unique=True)
     password = db.Column(db.String(50))
     personage = db.relationship('PersonageModel', backref='user', uselist=False)
+    is_admin = db.Column(db.Boolean)
 
     def __init__(self, username, email, password):
         self.login = username

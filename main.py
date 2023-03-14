@@ -24,20 +24,20 @@ def load_user(user_id):
     return db.session.query(UserModels).get(user_id)
 
 
-idle_messages = ["Ничего не происходит.",
-                 "Тишина...",
-                 "Нет новостей - хорошая новость"]
-battle_messages = ["{} сражается за свою жизнь!",
-                   "Сеча лютая, {} бьется отчаянно!",
-                   "{} рубится без остановки!"]
-dead_messages = ["{} разлагается физически",
-                 "Червяк ползет по ребру {} уже второй час",
-                 "{} переворачивается в гробу"]
 
-enemy_names = ["Болотник", "Чужой", "Кротокрыс", "Радиоактивный таракан"]
+idle_messages=["Ничего не происходит.",
+          "Тишина...",
+          "Нет новостей - хорошая новость"]
+battle_messages=["{} сражается за свою жизнь!",
+          "Сеча лютая, {} бьется отчаянно!",
+          "{} рубится без остановки!"]
+heal_messages=["{} пьёт зеленку",
+               "{} приложил к ране подорожник",
+               "Во сне {} мечтает о бинтах с перекисью"]
+dead_messages=["{} разлагается физически",
+          "Червяк ползет по ребру {} уже второй час",
+          "{} переворачивается в гробу"]
 
-
-# @app.before_first_request
 def create_tables():
     db.drop_all()
     db.create_all()
@@ -46,6 +46,10 @@ def create_tables():
     enemy3 = EnemyModel("Кротокрыс")
     enemy4 = EnemyModel("Болотник")
     db.session.add_all([enemy1, enemy2, enemy3, enemy4])
+
+    user_admin = UserModels("admin", "admin@gmail.ru", "admin666")
+    user_admin.is_admin=True
+    db.session.add_all([user_admin])
     db.session.commit()
 
 
@@ -113,7 +117,8 @@ def index():
     auth = current_user.is_authenticated
     if auth:
         m = random.choice(idle_messages)
-        return render_template("game.html", message=m)
+        username = current_user.login
+        return render_template("game.html", message=m, name=username)
     else:
         return redirect("/login")
 
@@ -137,7 +142,14 @@ def list_enemies():
     return render_template("enemies.html", enemies=enemies)
 
 
-@app.route("/personage/<p_id>", methods=["POST", "GET"])
+@app.route("/users")
+def list_users():
+        users = UserModels.query.all()
+        return render_template("users.html", users=users)
+
+
+
+@app.route("/personage/<p_id>",methods=["POST","GET"])
 def pers_page(p_id):
     if request.method == "GET":
         personage = PersonageModel.query.filter_by(id=p_id).first_or_404()
@@ -234,11 +246,13 @@ def update(p_id):
     if personage.state == 'idle':
         return {"status": 200, "message": random.choice(idle_messages), "hero": personage.json()}
     if personage.state == 'battle':
-        return {"status": 200, "message": random.choice(battle_messages).format(personage.name) + str(personage.hp),
-                "hero": personage.json, "enemy": personage.enemy.json}
+        return {"status": 200, "message": random.choice(battle_messages).format(personage.name),
+                "hero": personage.json, "enemy": personage.enemy.json}   
+    if personage.state == 'heal':
+        return {"status": 200, "message": random.choice(heal_messages).format(personage.name),"hero":personage.json()}
     if personage.state == 'dead':
-        return {"status": 200, "message": random.choice(dead_messages).format(personage.name) + str(personage.hp),
-                "hero": personage.json}
+        return {"status": 200, "message": random.choice(dead_messages).format(personage.name) ,"hero":personage.json()}
+
 
 
 def call_repeatedly(interval, func, *args):
@@ -268,7 +282,6 @@ def game_loop():
                     db.session.commit()
             elif personage.state == 'battle':
                 enemy = personage.enemy
-                # TODO5 функцию попадания для всех
                 if personage.is_attack_succesfull(enemy):
                     enemy.hp -= random.randint(1, 10)
                 if (random.randint(0, enemy.strength + enemy.perception) >
@@ -280,21 +293,15 @@ def game_loop():
                     print(personage.state, personage.name)
                 if personage.hp <= 0:
                     personage.state = 'dead'
-                    print(personage.state, personage.name)
-            elif personage.state == 'dead':
-                if personage.money >= 25 and personage.experience >= 50:
-                    personage.state = ""
+            elif personage.state == 'dead': #статус персонажа: мертв
+                if random.randint(1,1000)==1:
                     personage.hp = personage.max_hp
-                    personage.money -= 25
-                    personage.experience -= 25
+                    personage.money = 0
                     personage.state = "idle"
-                else:
-                    personage.state = 'dead'
-                    personage.money += 1
-                    personage.experience += 2
-            elif personage.state == "heal":
-                pass
-                # TODo4
+            elif personage.state=="heal": #статус персонажа: лечение
+                personage.hp +=1
+                if personage.hp==personage.max_hp:
+                    personage.state == "idle"
             db.session.add(personage)
         db.session.commit()
 
