@@ -44,8 +44,11 @@ def create_tables():
     db.create_all()
     user_admin = UserModels("admin", "admin@gmail.ru", "admin666")
     user_admin.is_admin = True
+    test_user = UserModels("user","user@mail.ru","user666")
+    test_user.is_admin = False
+    test_pers = PersonageModel("Test_pers")
 
-    db.session.add_all([user_admin])
+    db.session.add_all([user_admin,test_user,test_pers])
 
     db.session.commit()
 
@@ -154,15 +157,31 @@ def list_users():
 
 @app.route("/personage/<p_id>",methods=["POST","GET"])
 def pers_page(p_id):
-    if request.method == "GET":
-        personage = PersonageModel.query.filter_by(id=p_id).first_or_404()
-        return render_template("personage.html",personage=personage)
-    if request.method == "POST":
-        personage = PersonageModel.query.filter_by(id=p_id).first_or_404()
-        db.session.delete(personage)
-        db.session.commit()
-        return redirect("/personages")
+    if current_user.is_admin:
+        if request.method == "GET":
+            personage = PersonageModel.query.filter_by(id=p_id).first_or_404()
+            return render_template("personage.html",personage=personage)
+        if request.method == "POST":
+                personage = PersonageModel.query.filter_by(id=p_id).first_or_404()
+                db.session.delete(personage)
+                db.session.commit()
+                return redirect("/personages")
+    else:
+        return redirect("/")
 
+@app.route("/user/<p_id>",methods=["POST","GET"])
+def user_page(p_id):
+    if current_user.is_admin:
+        if request.method == "GET":
+            user = UserModels.query.filter_by(id=p_id).first_or_404()
+            return render_template("user.html",user=user)
+        if request.method == "POST":
+                user = UserModels.query.filter_by(id=p_id).first_or_404()
+                db.session.delete(user)
+                db.session.commit()
+                return redirect("/users")
+    else:
+        return redirect("/")
 @app.route("/enemy/<p_id>",methods=["POST","GET"])
 def enemy_page(p_id):
     if request.method == "GET":

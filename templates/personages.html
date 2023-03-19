@@ -37,7 +37,8 @@
 		{%for personage in personages%}
 		<li><a href="{{url_for('pers_page', p_id=personage.id)}}">{{personage.name}}</a></li>
 		{% endfor %}
-	</ul>
+	</ul><br>
+	<a href="http://127.0.0.1:5000/userpage">Домой</a>
 
 
 
