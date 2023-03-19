@@ -16,10 +16,4 @@ class SignupForm(FlaskForm):
     password2 = PasswordField('Подтвердите пароль', validators=[DataRequired(), Length(min=5, max=100)])
     submit = SubmitField()
 
-class LogoutForm(FlaskForm):
-    username = StringField('Логин', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(),Email()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
-    password2 = PasswordField('Подтвердите пароль', validators=[DataRequired()])
-    submit = SubmitField()
 
