@@ -38,15 +38,13 @@ dead_messages=["{} разлагается физически",
           "Червяк ползет по ребру {} уже второй час",
           "{} переворачивается в гробу"]
 
-@app.before_first_request
+#@app.before_first_request
 def create_tables():
     db.drop_all()
     db.create_all()
-    enemy1 = EnemyModel("Чужой")
-    enemy2 = EnemyModel("Радиоактивный таракан")
-    enemy3 = EnemyModel("Кротокрыс")
-    enemy4 = EnemyModel("Болотник")
-    db.session.add_all([enemy1, enemy2, enemy3, enemy4])
+    user_admin = UserModels("admin", "admin@gmail.ru", "admin666")
+    user_admin.is_admin=True
+    db.session.add_all([user_admin])
 
     db.session.commit()
 
@@ -134,6 +132,13 @@ def list_personages():
 def list_enemies():
     enemies = EnemyModel.query.all()
     return render_template("enemies.html", enemies=enemies)
+
+@app.route("/users")
+def list_users():
+        users = UserModels.query.all()
+        return render_template("users.html", users=users)
+
+
 
 @app.route("/personage/<p_id>",methods=["POST","GET"])
 def pers_page(p_id):
@@ -224,15 +229,15 @@ def dead(p_id):
 
 @app.route("/api/update/<p_id>")
 def update(p_id):
-    personage = PersonageModel.query.filter_by(id=p_id).first_or_404()
+    personage = PersonageModel.query.filter_by(user_id=p_id).first_or_404()
     if personage.state == 'idle':
-        return {"status": 200, "message": random.choice(idle_messages), "hero":personage.json()}
+        return {"status": 200, "message": random.choice(idle_messages), "hero":personage.json}
     if personage.state == 'battle':
-        return {"status": 200, "message": random.choice(battle_messages).format(personage.name),"hero":personage.json()}
+        return {"status": 200, "message": random.choice(battle_messages).format(personage.name),"hero":personage.json}
     if personage.state == 'heal':
-        return {"status": 200, "message": random.choice(heal_messages).format(personage.name),"hero":personage.json()}
+        return {"status": 200, "message": random.choice(heal_messages).format(personage.name),"hero":personage.json}
     if personage.state == 'dead':
-        return {"status": 200, "message": random.choice(dead_messages).format(personage.name) ,"hero":personage.json()}
+        return {"status": 200, "message": random.choice(dead_messages).format(personage.name) ,"hero":personage.json}
 
 
 def call_repeatedly(interval, func, *args):
