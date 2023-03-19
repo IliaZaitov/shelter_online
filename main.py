@@ -38,12 +38,13 @@ dead_messages=["{} разлагается физически",
           "Червяк ползет по ребру {} уже второй час",
           "{} переворачивается в гробу"]
 
-#@app.before_first_request
+@app.before_first_request
 def create_tables():
     db.drop_all()
     db.create_all()
     user_admin = UserModels("admin", "admin@gmail.ru", "admin666")
-    user_admin.is_admin=True
+    user_admin.is_admin = True
+
     db.session.add_all([user_admin])
 
     db.session.commit()
@@ -64,6 +65,7 @@ def login():
                 login_user(user, remember=False)
                 return redirect("/userpage")
             else:
+                print('Неправильный пароль')
                 return render_template('login.html', form=form, message="Неправильный пароль")
         else:
             return render_template('login.html', form=form, message="Такого пользователя не сущеcтвует")
@@ -128,8 +130,12 @@ def userpage():
 
 @app.route("/personages")
 def list_personages():
-    personages = PersonageModel.query.all()
-    return render_template("personages.html",personages=personages)
+    if current_user.is_admin:
+        personages = PersonageModel.query.all()
+        return render_template("personages.html",personages=personages)
+    else:
+        auth = current_user.login
+        return render_template("user_page.html", name=auth)
 
 @app.route("/enemies")
 def list_enemies():
@@ -138,9 +144,12 @@ def list_enemies():
 
 @app.route("/users")
 def list_users():
+    if current_user.is_admin:
         users = UserModels.query.all()
         return render_template("users.html", users=users)
-
+    else:
+        auth = current_user.login
+        return render_template("user_page.html", name=auth)
 
 
 @app.route("/personage/<p_id>",methods=["POST","GET"])
