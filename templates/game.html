@@ -17,7 +17,7 @@
     <div class="element" id="hero_container">
         <h1> Герой </h1>
         <div id="hero">
-
+        <div class="base_font" >
           <div id="hero_name"></div>
           <div> Здоровье: <span id="hero_hp"> </span> из <span id="hero_max_hp"> </span> </div>               
           <div> Сила: <span id="strength"> </span>  </div>
@@ -31,7 +31,7 @@
           <div> Аптечки: <span id="stimpacks"> </span>  </div>
           <div> Золото: <span id="money"> </span> </div>
           <div> Опыт: <span id="experience"> </span>  </div>
-
+</div>
         </div>
     </div>
 
@@ -58,6 +58,10 @@
 </div>
 
 <footer>
+<script src="https://yastatic.net/s3/frontend/forms/_/embed.js"></script>
+<iframe src="https://forms.yandex.ru/u/6416dff5f47e731d4e0fc364/?iframe=1" frameborder="0" name="ya-form-6416dff5f47e731d4e0fc364" width="650"></iframe>
+
+
 
 ДОБАВИТЬ: <br>
     список разработчиков и ссылокчи на соцсети<br>
@@ -124,6 +128,7 @@ function response_handler(str_response) {
     hero_div.innerHTML=hero.money;
     hero_div=document.getElementById('stimpacks');
     hero_div.innerHTML=hero.stimpacks;
+
 
 
 }

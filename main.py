@@ -50,22 +50,25 @@ def create_tables():
 
 @app.route("/login", methods=['post', 'get'])
 def login():
+    message=""
     form = LoginForm()  # добавляем форму
     username = ""
     password = ''
     if form.validate_on_submit():
         username = request.form.get('username')
         password = request.form.get('password')
-        user = UserModels.query.filter_by(login=username).first_or_404()
+        user = UserModels.query.filter_by(login=username).first()
         if user:
             if user.check_password(password):
                 # авторизация
                 login_user(user, remember=False)
                 return redirect("/userpage")
             else:
-                print('Неправильный пароль')
-
+                return render_template('login.html', form=form, message="Неправильный пароль")
+        else:
+            return render_template('login.html', form=form, message="Такого пользователя не сущеcтвует")
     return render_template('login.html', form=form)
+
 
 
 @app.route("/signup", methods=['post', 'get'])
@@ -76,14 +79,14 @@ def signup():
         personage_name = request.form.get('personage_name')
         email = request.form.get('email')
         password = request.form.get('password')
-        password_repeat = request.form.get('password2')
+        password2 = request.form.get('password2')
         if UserModels.query.filter_by(login=username).first():
             return render_template('reg.html', form=form, message="Пользователь существует")
         if UserModels.query.filter_by(mail=email).first():
             return render_template('reg.html', form=form, message="Email зарегистрирован")
         if PersonageModel.query.filter_by(name=personage_name).first():
             return render_template('reg.html', form=form, message="Персонаж с таким именем уже зарегистрирован")
-        if password == password_repeat:
+        if password == password2:
             user = UserModels(username, email, password)
             personage = PersonageModel(personage_name)
             db.session.add(user)
