@@ -9,9 +9,9 @@
 <div class="wrapper">
     <header>
     <div class="head_font" >Shelter online</div>
-    <div class="name_font" >{{name}}
+    <a href="/personage/current_user.id"><div class="name_font" >{{name}} </a>
     <a href="/logout">Выйти</a>
-        </div>
+    </div>
     </header>
 
     <div class="element" id="hero_container">
@@ -98,14 +98,16 @@ function response_handler(str_response) {
     }
     feed.append(news_div)
     let hero = json_response.hero
-    let hero_hp_div=document.getElementById('hero_hp');
-    hero_div.innerHTML=hero.hp;
 
+/*
     if (hero.state === 'battle') {
         enemy = json_response.enemy
         document.getElementById('enemy_max_hp').innerHTML(enemy.max_hp)
         document.getElementById('enemy_hp').innerHTML(enemy.hp)
-    }
+    }*/
+    let hero_div=document.getElementById('hero_hp');
+    hero_div.innerHTML=hero.hp;
+
     hero_div=document.getElementById('hero_max_hp');
     hero_div.innerHTML=hero.max_hp;
     hero_div=document.getElementById('strength');
