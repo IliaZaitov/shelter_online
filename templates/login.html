@@ -5,7 +5,8 @@
     <title>Title</title>
 </head>
 <body>
-<a href="http://127.0.0.1:5000/signup">Зарегестрироваться</a>
+<a href="http://127.0.0.1:5000/signup">Зарегестрироваться</a> <br>
+{{message}}
 <form action="" method="post">
  {{ form.csrf_token() }}
  {% for field in form if field.name != "csrf_token" %}
