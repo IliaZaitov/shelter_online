@@ -16,13 +16,12 @@
     <div>C:<progress max="10" value="{{personage.charisma}}"></div>
     <div>I:<progress max="10" value="{{personage.intellect}}"></div>
     <div>A:<progress max="10" value="{{personage.agility}}"></div>
-    <div>L:<progress max="10" value="{{personage.luck}}"></div><hr>
-
-<p>
-    <form method="post">Delete personage?
-
-<input type="submit"  value="Submit"></form>
-
-	</p>
+    <div>L:<progress max="10" value="{{personage.luck}}"></div>
+<script>
+    if (current_user.is_admin){
+    document.write("<form method="post">Delete personage?
+    <input type="submit"  value="Submit"></form>")
+    }
+</script>
 </body>
 </html>
