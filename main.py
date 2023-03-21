@@ -83,11 +83,11 @@ def signup():
         password = request.form.get('password')
         password2 = request.form.get('password2')
         if UserModels.query.filter_by(login=username).first():
-            return render_template('reg.html', form=form, message="Пользователь существует")
+            return render_template('signup.html', form=form, message="Пользователь существует")
         if UserModels.query.filter_by(mail=email).first():
-            return render_template('reg.html', form=form, message="Email зарегистрирован")
+            return render_template('signup.html', form=form, message="Email зарегистрирован")
         if PersonageModel.query.filter_by(name=personage_name).first():
-            return render_template('reg.html', form=form, message="Персонаж с таким именем уже зарегистрирован")
+            return render_template('signup.html', form=form, message="Персонаж с таким именем уже зарегистрирован")
         if password == password2:
             user = UserModels(username, email, password)
             personage = PersonageModel(personage_name)
