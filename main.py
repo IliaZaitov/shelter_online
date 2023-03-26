@@ -46,10 +46,17 @@ def create_tables():
     user_admin.is_admin = True
     test_user = UserModels("user","user@mail.ru","user666")
     test_user.is_admin = False
-    test_pers = PersonageModel("Test_pers")
 
-    db.session.add_all([user_admin,test_user,test_pers])
+    db.session.add_all([user_admin,test_user])
 
+    db.session.commit()
+
+    test_pers = PersonageModel("test_pers")
+    test_pers.set_user(test_user)
+    test_admin = PersonageModel("user_admin")
+    test_admin.set_user(user_admin)
+
+    db.session.add_all([test_admin, test_pers])
     db.session.commit()
 
 @app.route("/login", methods=['post', 'get'])
