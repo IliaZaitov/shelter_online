@@ -37,8 +37,10 @@ heal_messages=["{} пьёт зеленку",
 dead_messages=["{} разлагается физически",
           "Червяк ползет по ребру {} уже второй час",
           "{} переворачивается в гробу"]
+enemies_name =['Кротокрыс', 'Радскорпион','Рейдер','Дикарь','Яо-гай','Казадор','Коготь смерти']
 
-#@app.before_first_request
+
+@app.before_first_request
 def create_tables():
     db.drop_all()
     db.create_all()
@@ -267,15 +269,17 @@ def dead(p_id):
 
 @app.route("/api/update/<p_id>")
 def update(p_id):
+    #добавить проверку на current_user - если у персонажа user не совпадает c current_user - отправить ошибку - Александр
     personage = PersonageModel.query.filter_by(user_id=p_id).first_or_404()
     if personage.state == 'idle':
-        return {"status": 200, "message": random.choice(idle_messages), "hero":personage.json}
+        return {"status": 200, "message": random.choice(idle_messages), "hero": personage.json}
     if personage.state == 'battle':
-        return {"status": 200, "message": random.choice(battle_messages).format(personage.name),"hero":personage.json}
+        print(personage.enemy)
+        return {"status": 200, "message": random.choice(battle_messages).format(personage.name), "hero":personage.json}
     if personage.state == 'heal':
-        return {"status": 200, "message": random.choice(heal_messages).format(personage.name),"hero":personage.json}
+        return {"status": 200, "message": random.choice(heal_messages).format(personage.name), "hero":personage.json}
     if personage.state == 'dead':
-        return {"status": 200, "message": random.choice(dead_messages).format(personage.name) ,"hero":personage.json}
+        return {"status": 200, "message": random.choice(dead_messages).format(personage.name), "hero":personage.json}
 
 
 def call_repeatedly(interval, func, *args):
@@ -284,7 +288,6 @@ def call_repeatedly(interval, func, *args):
     def loop():
         while not stopped.wait(interval): # the first call is in `interval` secs
             func(*args)
-            print(counter)
     Thread(target=loop).start()
     return stopped.set
 
@@ -295,25 +298,26 @@ def game_loop():
             personage.money += 1 #+деньги
             personage.experience += 2 #+опыт
             if personage.state=='idle': #статус персонажа: спокойствие
-                if random.randint(1,100)<=5:
+                if random.randint(1,100)<=25:
                     personage.state="battle"
+                    enemy = EnemyModel(random.choice(enemies_name), personage)
+                    db.session.add(enemy)
                 if personage.hp<20:
                     personage.state="heal"
             elif personage.state == 'battle': #статус персонажа: бой
-                enemy = EnemyModel.query.filter_by(id=1).first_or_404()
-                #TODO5 функцию попадания для всех
+                enemy = personage.enemy
+                #TODO5 проверка на наличие стимпаков и, если есть и здоровье меньше 10 - лечение стимпаками на двадцать хп - Егор
                 if personage.is_attack_succesfull(enemy):
-                    enemy.hp-=random.randint(1,10)
+                    enemy.hp-=random.randint(3,6)
                 if (random.randint(0,enemy.strength+enemy.perception)>
                         random.randint(0,personage.endurance + personage.agility)):
-                    personage.hp-=random.randint(1,10)
+                    personage.hp-=random.randint(1,3)
                 if personage.hp>0 and enemy.hp<=0:
                     personage.state = 'idle'
                     personage.experience += 10
-                    print(personage.state, personage.name)
+                    db.session.delete(personage.enemy)
                 if personage.hp<=0: #смерть
                     personage.state='dead'
-                    print(personage.state, personage.name)
             elif personage.state == 'dead': #статус персонажа: мертв
                 if random.randint(1,1000)==1:
                     personage.hp = personage.max_hp
@@ -333,13 +337,14 @@ def game_loop():
                     '''
             elif personage.state=="heal": #статус персонажа: лечение
                 personage.hp +=1
-                if personage.hp==personage.max_hp:
-                    personage.state == "idle"
+                if personage.hp>=personage.max_hp:
+                    personage.hp = personage.max_hp
+                    personage.state = "idle"
                 #TODo4
                 #
             db.session.add(personage)
         db.session.commit()
 
-cancel_future_calls = call_repeatedly(10, game_loop)
+cancel_future_calls = call_repeatedly(1, game_loop)
 
 app.run()

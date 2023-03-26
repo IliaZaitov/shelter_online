@@ -69,7 +69,7 @@ class PersonageModel(db.Model):
 class EnemyModel(db.Model):
     __tablename__ = "enemies"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), unique=True)
+    name = db.Column(db.String(50), nullable=False)
     strength = db.Column(db.Integer, nullable=False)
     perception = db.Column(db.Integer, nullable=False)
     endurance = db.Column(db.Integer, nullable=False)
