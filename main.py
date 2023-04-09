@@ -40,7 +40,7 @@ dead_messages=["{} разлагается физически",
 enemies_name =['Кротокрыс', 'Радскорпион','Рейдер','Дикарь','Яо-гай','Казадор','Коготь смерти']
 
 
-@app.before_first_request
+#@app.before_first_request
 def create_tables():
     db.drop_all()
     db.create_all()
@@ -274,8 +274,9 @@ def update(p_id):
     if personage.state == 'idle':
         return {"status": 200, "message": random.choice(idle_messages), "hero": personage.json}
     if personage.state == 'battle':
-        print(personage.enemy)
-        return {"status": 200, "message": random.choice(battle_messages).format(personage.name), "hero":personage.json}
+        enemy=personage.enemy
+        print(type(enemy))
+        return {"status": 200, "message": random.choice(battle_messages).format(personage.name), "hero":personage.json, "enemy":enemy.json}
     if personage.state == 'heal':
         return {"status": 200, "message": random.choice(heal_messages).format(personage.name), "hero":personage.json}
     if personage.state == 'dead':

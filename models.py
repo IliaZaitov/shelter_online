@@ -63,6 +63,11 @@ class PersonageModel(db.Model):
     def json(self):
         dictionary = self.__dict__
         dictionary.pop('_sa_instance_state')
+        try:
+            dictionary.pop('enemy')
+        except:
+            print('Врагов нет')
+
         return dictionary
 
 
