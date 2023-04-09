@@ -47,6 +47,7 @@
         <h1> Враг </h1>
         <div class="base_font" >
         <div id="enemy">
+          <div> Враг: <span id="enemy_name"> </span></div>
           <div> Здоровье: <span id="enemy_hp"> </span> из <span id="enemy_max_hp"> </span> </div>
 
         </div>
@@ -108,12 +109,13 @@ function response_handler(str_response) {
     let hero = json_response.hero
 
 
-/*
-    if (hero.state === 'battle') {
-        enemy = json_response.enemy
-        document.getElementById('enemy_max_hp').innerHTML(enemy.max_hp)
-        document.getElementById('enemy_hp').innerHTML(enemy.hp)
-    }*/
+    if (hero.state == 'battle') {
+        let enemy = json_response.enemy
+        document.getElementById('enemy_name').innerHTML=enemy.name
+        document.getElementById('enemy_max_hp').innerHTML=enemy.max_hp
+        document.getElementById('enemy_hp').innerHTML=enemy.hp
+    }
+
     let hero_div=document.getElementById('hero_hp');
     hero_div.innerHTML=hero.hp;
     //добавить имя героя
@@ -139,13 +141,7 @@ function response_handler(str_response) {
     hero_div.innerHTML=hero.money;
     hero_div=document.getElementById('stimpacks');
     hero_div.innerHTML=hero.stimpacks;
-     if (hero.state === 'battle') {
-        enemy = json_response.hero.enemy;
-        console.log(enemy)
-        document.getElementById('enemy_max_hp').innerHTML(enemy.max_hp)
-        document.getElementById('enemy_hp').innerHTML(enemy.hp)
-        //добавить имя и здоровье врага - Григорий
-    }
+
 
 
 
